@@ -3,7 +3,7 @@
   //   - 本サイト : https://opentdb.com/
   //   - 利用するAPI : https://opentdb.com/api.php?amount=10&type=multiple
 
-  const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple';
+  const API_URL = "https://opentdb.com/api.php?amount=10&type=multiple";
 
   // API_URLを使って実装してもらいたいこと
   //   1. Fetch API(fetchメソッド)を使ってAPI経由でデータを取得する
@@ -14,7 +14,20 @@
   //     - resultsプロパティ(配列)の中に含まれている10件のデータ(オブジェクト)をforEachで取得する
   //       - 「◯件目のクイズデータ」をli要素として追加する
   //       - buildQuizList関数の戻り値(ul要素のDOM)をli要素に追加する。(結果としてネスト(入れ子)構造のリストになる)
+  const quizList = document.getElementById("quiz-list");
 
+  fetch(API_URL)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      data.results.forEach((data, i) => {
+        const quizData = document.createElement("li");
+        quizData.textContent = `${i + 1}件目のクイズデータ`;
+        quizData.appendChild(buildQuizList(data));
+        quizList.appendChild(quizData);
+      });
+    });
 
   // `buildQuizList関数` を実装する
   //   - 実装する内容
@@ -29,5 +42,13 @@
   //    - quiz : オブジェクト(クイズデータ)
   //  - 戻り値
   //    - ul要素のDOM
-
+  const buildQuizList = quiz => {
+    const nestUl = document.createElement("ul");
+    Object.keys(quiz).forEach(key => {
+      const quizDatadetial = document.createElement("li");
+      quizDatadetial.innerHTML = ` <strong>${key}</strong> : ${quiz[key]}`;
+      nestUl.appendChild(quizDatadetial);
+    });
+    return nestUl;
+  };
 })();
